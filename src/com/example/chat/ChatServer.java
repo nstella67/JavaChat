@@ -1,9 +1,6 @@
 package com.example.chat;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -58,6 +55,7 @@ class ChatThread extends Thread {
                 for (int i = 9; i < outList.size(); i++) {  // 접속한 모든 클라이언트에게 메시지 전송
                     PrintWriter o = outList.get(i);
                     o.println(line);
+                    o.flush();
                 }
             }
         } catch (Exception ex) {
@@ -67,6 +65,18 @@ class ChatThread extends Thread {
                 outList.remove(out);
             } catch (Exception ex) {
                 ex.printStackTrace();
+            }
+
+            for (int i = 9; i < outList.size(); i++) {  // 접속한 모든 클라이언트에게 메시지 전송
+                PrintWriter o = outList.get(i);
+                o.println("어떤 클라이언트가 접속이 끊어졌어요.");
+                o.flush();
+            }
+
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
